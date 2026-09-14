@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Matylda House - Kiosk Interface</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <style>
+        :root {
+            --brand-green: #2B5115;
+            --corporate-grey: #555555;
+            --white: #FFFFFF;
+            --light-grey: #F8FAFC;
+            --tile-hover: #F0F4EF;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: var(--white);
+            color: var(--corporate-grey);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+
+        .app-section {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: opacity 0.4s ease, visibility 0.4s;
+        }
+
+        .hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* --- STYLES EKRANU WYBORU JĘZYKA --- */
+        #lang-section {
+            background-color: var(--white);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            z-index: 100;
+        }
+
+        .lang-logo img {
+            height: 180px;
+            width: auto;
+            margin-bottom: 20px;
+            object-fit: contain;
+        }
+
+        .lang-title {
+            font-family: 'Playfair Display', serif;
+            color: var(--brand-green);
+            font-size: 36px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .lang-subtitle {
+            font-size: 18px;
+            color: var(--corporate-grey);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .lang-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            width: 100%;
+            max-width: 950px;
+        }
+
+        .lang-card {
+            background-color: var(--light-grey);
+            border: 2px solid #E2E8F0;
+            border-radius: 16px;
+            padding: 20px 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .lang-card:active {
+            transform: scale(0.96);
+            border-color: var(--brand-green);
+            background-color: var(--tile-hover);
+        }
+
+        .lang-card .fi {
+            font-size: 42px;
+            border-radius: 6px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            margin-bottom: 12px;
+        }
+
+        .lang-card span {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--brand-green);
+        }
+
+        /* --- STYLES DLA SLAJDERA --- */
+        .swiper {
+            width: 100%;
+            height: 100%;
+            background-color: var(--white);
+        }
+
+        .swiper-slide {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: var(--corporate-grey);
+            padding: 40px;
+            background-color: var(--white);
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        .slide-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 1100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1, h2, .slide-title {
+            font-family: 'Playfair Display', serif;
+            color: var(--brand-green);
+            font-size: 42px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .slide-subtitle {
+            font-size: 24px;
+            color: var(--corporate-grey);
+            font-weight: 500;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .slide-logo img {
+            height: 220px;
+            width: auto;
+            margin-bottom: 20px;
+            object-fit: contain;
+        }
+
+        .tiled-content {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .slide-tile {
+            background-color: var(--light-grey);
+            padding: 30px 20px;
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid #E2E8F0;
+        }
+
+        .slide-tile .icon {
+            font-size: 40px;
+            color: var(--brand-green);
+            margin-bottom: 15px;
+        }
+
+        .slide-tile h3 {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 20px;
+            color: var(--brand-green);
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+            width: 100%;
+            text-align: left;
+        }
+
+        .bullet-list {
+            list-style: none;
+            padding: 0;
+            width: 100%;
+        }
+
+        .bullet-list li {
+            position: relative;
+            padding-left: 45px;
+            margin-bottom: 20px;
+            font-size: 20px;
+            color: var(--corporate-grey);
+        }
+
+        .bullet-list i {
+            position: absolute;
+            left: 0;
+            top: 4px;
+            color: var(--brand-green);
+            font-size: 24px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        th {
+            background: var(--brand-green);
+            color: var(--white);
+            padding: 16px 20px;
+            text-align: left;
+            font-size: 18px;
+        }
+
+        td {
+            padding: 16px 20px;
+            border-bottom: 1px solid #EEE;
+            font-size: 16px;
+            color: var(--corporate-grey);
+        }
+
+        tr:nth-child(even) {
+            background-color: var(--light-grey);
+        }
+
+        .btn-main {
+            background-color: var(--brand-green);
+            color: var(--white);
+            padding: 18px 40px;
+            font-size: 20px;
+            font-weight: 700;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(43, 81, 21, 0.2);
+            transition: transform 0.2s;
+            margin-top: 30px;
+        }
+
+        .btn-main:active {
+            transform: scale(0.96);
+        }
+
+      .swipe-hint {
+            margin-top: 25px;
+            font-size: 16px;
+            color: var(--brand-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-weight: 700;
+            animation: pulse 1.8s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.08);
+                opacity: 0.65;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .swiper-pagination-bullet-active {
+            background: var(--brand-green) !important;
+        }
+        .swiper-button-next, .swiper-button-prev {
+            color: var(--brand-green) !important;
+        }
+
+        /* --- STYLES DLA MENU KAFELKOWEGO --- */
+        #menu-section {
+            background-color: var(--white);
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: var(--brand-green);
+            color: var(--white);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            height: 120px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-box {
+            background: transparent;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-box img {
+            height: 90px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+        }
+
+       /* --- ELEGANT BRANDING IN HEADER (WYŚRODKOWANY) --- */
+        .header-brand {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center; /* Wyśrodkowanie elementów w pionowym układzie */
+            text-align: center;  /* Wyśrodkowanie tekstu */
+        }
+
+        .header-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--white);
+            letter-spacing: 1.5px;
+            line-height: 1.1;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .header-subtitle {
+            font-family: 'Playfair Display', serif;
+            font-size: 13px;
+            font-weight: 400;
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.85);
+            letter-spacing: 2px;
+            margin-top: 3px;
+            text-align: center;
+        }
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-header {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: var(--white);
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        main {
+            flex: 1;
+            padding: 30px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 20px;
+            background-color: var(--white);
+        }
+
+        .tile {
+            background-color: var(--light-grey);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            text-decoration: none;
+            color: var(--corporate-grey);
+            border: 1px solid #E2E8F0;
+            transition: all 0.2s ease;
+        }
+
+        .tile:active {
+            transform: scale(0.98);
+            background-color: var(--tile-hover);
+            border-color: var(--brand-green);
+        }
+
+        .tile i {
+            font-size: 40px;
+            color: var(--brand-green);
+            margin-bottom: 12px;
+        }
+
+        .tile h3 {
+            color: var(--brand-green);
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .tile p {
+            font-size: 13px;
+            color: var(--corporate-grey);
+            line-height: 1.3;
+        }
+
+        footer {
+            text-align: center;
+            padding: 14px;
+            font-size: 14px;
+            color: var(--corporate-grey);
+            background-color: var(--light-grey);
+            border-top: 1px solid #E2E8F0;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="lang-section" class="app-section">
+        <div class="lang-logo">
+            <img src="Przezroczysty.png" alt="Matylda House Logo">
+        </div>
+        <h1 class="lang-title">Matylda House</h1>
+        <p class="lang-subtitle">Select Language / Wybierz Język</p>
+        
+        <div class="lang-grid">
+            <div class="lang-card" onclick="selectLanguage('pl')">
+                <span class="fi fi-pl"></span>
+                <span>POLSKI</span>
+            </div>
+            <div class="lang-card" onclick="selectLanguage('en')">
+                <span class="fi fi-gb"></span>
+                <span>ENGLISH</span>
+            </div>
+            <div class="lang-card" onclick="selectLanguage('de')">
+                <span class="fi fi-de"></span>
+                <span>DEUTSCH</span>
+            </div>
+            <div class="lang-card" onclick="selectLanguage('cz')">
+                <span class="fi fi-cz"></span>
+                <span>ČEŠTINA</span>
+            </div>
+            <div class="lang-card" onclick="selectLanguage('fr')">
+                <span class="fi fi-fr"></span>
+                <span>FRANÇAIS</span>
+            </div>
+            <div class="lang-card" onclick="selectLanguage('es')">
+                <span class="fi fi-es"></span>
+                <span>ESPAÑOL</span>
+            </div>
+            <div class="lang-card" onclick="selectLanguage('ua')">
+                <span class="fi fi-ua"></span>
+                <span>УКРАЇНСЬКА</span>
+            </div>
+            <div class="lang-card" onclick="selectLanguage('ru')">
+                <span class="fi fi-ru"></span>
+                <span>РУССКИЙ</span>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="slider-section" class="app-section hidden">
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper">
+                
+                <div class="swiper-slide">
+                    <div class="slide-content">
+                        <div class="slide-logo">
+                            <img src="Przezroczysty.png" alt="Matylda House Logo">
+                        </div>
+                        <h1 style="font-size: 56px;">Matylda House</h1>
+                        <p class="slide-subtitle" id="s1-subtitle">Witamy w apartamencie</p>
+                        <div class="swipe-hint">
+                            <span id="s1-hint">Przesuń w lewo, aby zacząć</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="swiper-slide">
+                    <div class="slide-content">
+                        <h2 id="s2-title">W czym możemy pomóc?</h2>
+                        <div class="tiled-content">
+                            <div class="slide-tile">
+                                <div class="icon"><i class="fa-solid fa-wifi"></i></div>
+                                <h3 id="s2-t1-h">WiFi & Kody</h3>
+                                <p id="s2-t1-p">Dane logowania i dostęp</p>
+                            </div>
+                            <div class="slide-tile">
+                                <div class="icon"><i class="fa-solid fa-file-contract"></i></div>
+                                <h3 id="s2-t2-h">Regulamin</h3>
+                                <p id="s2-t2-p">Zasady panujące w domu</p>
+                            </div>
+                            <div class="slide-tile">
+                                <div class="icon"><i class="fa-solid fa-car"></i></div>
+                                <h3 id="s2-t3-h">Parking</h3>
+                                <p id="s2-t3-p">Twoje miejsce postojowe</p>
+                            </div>
+                            <div class="slide-tile">
+                                <div class="icon"><i class="fa-solid fa-map-location-dot"></i></div>
+                                <h3 id="s2-t4-h">Kraków</h3>
+                                <p id="s2-t4-p">Atrakcje i zwiedzanie</p>
+                            </div>
+                            <div class="slide-tile">
+                                <div class="icon"><i class="fa-solid fa-utensils"></i></div>
+                                <h3 id="s2-t5-h">Restauracje</h3>
+                                <p id="s2-t5-p">Gdzie zjeść w okolicy</p>
+                            </div>
+                            <div class="slide-tile">
+                                <div class="icon"><i class="fa-solid fa-phone-flip"></i></div>
+                                <h3 id="s2-t6-h">Kontakt</h3>
+                                <p id="s2-t6-p">Pomoc i numery alarmowe</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="swiper-slide">
+                    <div class="slide-content">
+                        <h2 id="s3-title">WiFi & Dostęp do obiektu</h2>
+                        <div class="two-column" style="margin-top: 20px;">
+                            <ul class="bullet-list">
+                                <li><i class="fa-solid fa-network-wired"></i> <strong id="s3-l1">Sieć:</strong> Matylda_House</li>
+                                <li><i class="fa-solid fa-lock"></i> <strong id="s3-l2">Hasło:</strong> Domowe_WIFI</li>
+                                <li><i class="fa-solid fa-key"></i> <strong id="s3-l3">Kod do bramy:</strong> #1963</li>
+                                <li><i class="fa-solid fa-door-open"></i> <strong id="s3-l4">Kod do drzwi:</strong> 147258</li>
+                            </ul>
+                            <div style="text-align: center; background: var(--light-grey); padding: 30px; border-radius: 16px; border: 1px solid #E2E8F0;">
+                                <i class="fa-solid fa-qrcode" style="font-size: 100px; color: var(--brand-green);"></i>
+                                <p id="s3-qr" style="margin-top: 15px; font-weight: bold;">Zeskanuj, aby połączyć się z WiFi</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="swiper-slide">
+                    <div class="slide-content">
+                        <h2 id="s4-title">Regulamin i zasady domu</h2>
+                        <div class="two-column" style="margin-top: 20px;">
+                            <ul class="bullet-list">
+                                <li><i class="fa-solid fa-clock"></i> <strong id="s4-l1">Doba hotelowa:</strong> 15:00 - 11:00</li>
+                                <li><i class="fa-solid fa-volume-xmark"></i> <strong id="s4-l2">Cisza nocna:</strong> 22:00 - 06:00</li>
+                                <li><i class="fa-solid fa-ban-smoking"></i> <strong id="s4-l3">Zakaz palenia:</strong> Wewnątrz obiektu</li>
+                            </ul>
+                            <ul class="bullet-list">
+                                <li><i class="fa-solid fa-paw"></i> <strong id="s4-l4">Zwierzęta:</strong> Wymagane zgłoszenie, opłata dodatkowa wynosi 50zł za zwierzę za dobę</li>
+                                <li><i class="fa-solid fa-trash-can"></i> <strong id="s4-l5">Segregacja:</strong> Śmietniki na zewnątrz od południowej strony budynku</li>
+                                <li><i class="fa-solid fa-bolt"></i> <strong id="s4-l6">Energia:</strong> Prosimy o zamykanie okien przy włączonym ogrzewaniu</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="swiper-slide">
+                    <div class="slide-content">
+                        <h2 id="s5-title">Parking - przed budynkiem</h2>
+                        <div class="two-column" style="margin-top: 20px;">
+                            <div style="background: var(--light-grey); padding: 40px; border-radius: 16px; text-align: center; border: 1px solid #E2E8F0;">
+                                <i class="fa-solid fa-square-parking" style="font-size: 110px; color: var(--brand-green);"></i>
+                                <h3 id="s5-level" style="font-size: 28px; color: var(--brand-green); margin-top: 10px;">Poziom -1</h3>
+                            </div>
+                            <div>
+                                <h3 id="s5-instr-head" style="color: var(--brand-green); margin-bottom: 15px; font-size: 22px;">Instrukcja parkowania</h3>
+                                <p id="s5-p1" style="margin-bottom: 10px;">1. Zaparkuj jadąc na wprost od bramy wjazdowej tuż przed budynkiem.</p>
+                                <p id="s5-p2" style="margin-bottom: 10px;">2. Użyj pilota przyczepionego do kluczy, aby otworzyć bramę.</p>
+                                <p id="s5-p3" style="margin-bottom: 10px;">3. Twoje miejsce to nr 12 na poziomie -1.</p>
+                                <p id="s5-p4">4. Winda z parkingu dowiezie Cię bezpośrednio pod apartament.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="swiper-slide">
+                    <div class="slide-content">
+                        <h2 id="s6-title">Odkryj Kraków</h2>
+                        <div class="tiled-content">
+                            <div class="slide-tile">
+                                <i class="fa-solid fa-chess-rook icon"></i>
+                                <h3 id="s6-t1-h">Rynek Główny</h3>
+                                <p id="s6-t1-p">5 min spacerem od obiektu</p>
+                            </div>
+                            <div class="slide-tile">
+                                <i class="fa-solid fa-castle icon"></i>
+                                <h3 id="s6-t2-h">Zamek na Wawelu</h3>
+                                <p id="s6-t2-p">12 min spacerem brzegiem Wisły</p>
+                            </div>
+                            <div class="slide-tile">
+                                <i class="fa-solid fa-place-of-worship icon"></i>
+                                <h3 id="s6-t3-h">Kazimierz</h3>
+                                <p id="s6-t3-p">15 min spacerem do klimatycznej dzielnicy</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="swiper-slide">
+                    <div class="slide-content">
+                        <h2 id="s7-title">Polecane Restauracje</h2>
+                        <table style="margin-top: 15px;">
+                            <thead>
+                                <tr>
+                                    <th id="s7-th1">Miejsce</th>
+                                    <th id="s7-th2">Kuchnia</th>
+                                    <th id="s7-th3">Lokalizacja</th>
+                                    <th id="s7-th4">Polecamy</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Szara Gęś</strong></td>
+                                    <td id="s7-r1-c">Nowoczesna Polska</td>
+                                    <td id="s7-r1-l">Rynek Główny</td>
+                                    <td id="s7-r1-r">Deser "Szara Gęś"</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Nolio</strong></td>
+                                    <td id="s7-r2-c">Włoska (Pizza)</td>
+                                    <td>Kazimierz</td>
+                                    <td id="s7-r2-r">Pizza Neapolitańska</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Starka</strong></td>
+                                    <td id="s7-r3-c">Tradycyjna</td>
+                                    <td>Kazimierz</td>
+                                    <td id="s7-r3-r">Placki ziemniaczane</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Wesoła Cafe</strong></td>
+                                    <td id="s7-r4-c">Śniadania / Kawa</td>
+                                    <td>ul. Rakowicka</td>
+                                    <td>Specialty Coffee</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="swiper-slide">
+                    <div class="slide-content">
+                        <h2 id="s8-title">Prognoza Pogody</h2>
+                        <div style="background: var(--light-grey); padding: 40px; border-radius: 20px; text-align: center; width: 60%; border: 1px solid #E2E8F0;">
+                            <i class="fa-solid fa-sun" style="font-size: 80px; color: #F59E0B;"></i>
+                            <h3 style="font-size: 56px; color: var(--brand-green); margin: 15px 0;">24°C</h3>
+                            <p id="s8-status" style="font-size: 20px;">Słonecznie, Kraków</p>
+                            <p id="s8-desc" style="margin-top: 15px; font-style: italic;">Słoneczny dzień na zwiedzanie Starego Miasta!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="swiper-slide">
+                    <div class="slide-content">
+                        <h2 id="s9-title">Informacje Praktyczne</h2>
+                        <div class="tiled-content">
+                            <div class="slide-tile">
+                                <i class="fa-solid fa-cart-shopping icon"></i>
+                                <h3 id="s9-t1-h">Sklep</h3>
+                                <p id="s9-t1-p">Żabka (50m)<br>Biedronka (300m)</p>
+                            </div>
+                            <div class="slide-tile">
+                                <i class="fa-solid fa-bus icon"></i>
+                                <h3 id="s9-t2-h">Transport</h3>
+                                <p id="s9-t2-p">Przystanek "Stare Miasto"<br>Aplikacja Jakdojade</p>
+                            </div>
+                            <div class="slide-tile">
+                                <i class="fa-solid fa-capsules icon"></i>
+                                <h3 id="s9-t3-h">Apteka</h3>
+                                <p id="s9-t3-p">Całodobowa<br>ul. Kalwaryjska 10</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="swiper-slide">
+                    <div class="slide-content">
+                        <h2 id="s10-title">Potrzebujesz pomocy?</h2>
+                        <div class="two-column" style="margin-top: 10px;">
+                            <div>
+                                <h3 id="s10-host-h" style="color: var(--brand-green); margin-bottom: 15px; font-size: 22px;">Twój Gospodarz</h3>
+                                <p id="s10-host-p" style="margin-bottom: 20px;">Jesteśmy do Twojej dyspozycji przez cały czas trwania pobytu.</p>
+                                <ul class="bullet-list">
+                                    <li><i class="fa-solid fa-phone"></i> +48 508 048 886</li>
+                                    <li><i class="fa-brands fa-whatsapp"></i> WhatsApp: +48 508 048 886</li>
+                                    <li><i class="fa-solid fa-envelope"></i> kontakt@matyldahouse.pl</li>
+                                </ul>
+                            </div>
+                            <div style="background: var(--brand-green); color: var(--white); padding: 35px; border-radius: 20px;">
+                                <h3 id="s10-emerg-h" style="color: var(--white); margin-bottom: 15px; font-size: 22px;">Numery alarmowe</h3>
+                                <p id="s10-emerg-num" style="color: #E2E8F0;">Numer ratunkowy:</p>
+                                <p style="font-size: 44px; font-weight: bold; margin: 5px 0;">112</p>
+                                <p id="s10-addr-lbl" style="color: #E2E8F0; margin-top: 15px;">Adres apartamentu:</p>
+                                <p style="font-size: 18px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 8px;">ul. Landaua 12, Kraków</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="swiper-slide">
+                    <div class="slide-content">
+                        <h1 id="s11-title" style="font-size: 60px;">Życzymy udanego pobytu!</h1>
+                        <p id="s11-subtitle" class="slide-subtitle" style="margin-top: 15px;">Zespół Matylda House</p>
+                        <p id="s11-hint" class="swipe-hint" style="margin-top: 30px;">Przesuń jeszcze raz w lewo, aby otworzyć Pulpit Menu →</p>
+                    </div>
+                </div>
+
+                <div class="swiper-slide">
+                    <div class="slide-content">
+                        <h2 id="s12-title">PULPIT GŁÓWNY</h2>
+                        <p id="s12-subtitle" class="slide-subtitle">Przejdź do interaktywnego menu kafelkowego, aby szybko znaleźć potrzebne linki i dokumenty.</p>
+                        <button id="s12-btn" class="btn-main" onclick="showMenu()">OTWÓRZ MENU GŁÓWNE</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
+    </div>
+
+
+    <div id="menu-section" class="app-section hidden">
+        <header>
+            <div class="header-left">
+                <div class="logo-box">
+                    <img src="Przezroczysty.png" alt="Matylda House Logo">
+                </div>
+                <div class="header-brand">
+                    <div class="header-title">Matylda House</div>
+                    <div class="header-subtitle">You are welcome</div>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="btn-header" onclick="showLangSelect()">
+                    <i class="fa-solid fa-globe"></i>
+                    <span id="m-btn-lang">Język / Language</span>
+                </button>
+                <button class="btn-header" onclick="showSlides()">
+                    <i class="fa-solid fa-images"></i>
+                    <span id="m-btn-slides">Slajdy</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <a href="#" class="tile">
+                <i class="fa-solid fa-wifi"></i>
+                <h3 id="m-t1-h">WIFI & KODY</h3>
+                <p id="m-t1-p"><strong>Sieć:</strong> Matylda<br><strong>Hasło:</strong> Gosc123</p>
+            </a>
+            <a href="regulamin.pdf" target="_blank" class="tile">
+                <i class="fa-solid fa-file-contract"></i>
+                <h3 id="m-t2-h">REGULAMIN OBIEKTU</h3>
+                <p id="m-t2-p">Zasady pobytu i cisza nocna</p>
+            </a>
+            <a href="parking.pdf" target="_blank" class="tile">
+                <i class="fa-solid fa-car"></i>
+                <h3 id="m-t3-h">PARKING</h3>
+                <p id="m-t3-p">Przed budynkiem<br>Instrukcja wjazdu</p>
+            </a>
+            <a href="tel:+48508048886" class="tile">
+                <i class="fa-solid fa-phone-flip"></i>
+                <h3 id="m-t4-h">POMOC & KONTAKT</h3>
+                <p id="m-t4-p">Gospodarz:<br>+48 508 048 886</p>
+            </a>
+            <a href="https://www.accuweather.com/pl/pl/krakow/274455/weather-forecast/274455" target="_blank" class="tile">
+                <i class="fa-solid fa-sun"></i>
+                <h3 id="m-t5-h">DZISIEJSZA POGODA</h3>
+                <p id="m-t5-p">Prognoza dla Krakowa</p>
+            </a>
+            <a href="https://www.google.com/maps/search/atrakcje+Krak%C3%B3w" target="_blank" class="tile">
+                <i class="fa-solid fa-map-location-dot"></i>
+                <h3 id="m-t6-h">ATRAKCJE KRAKOWA</h3>
+                <p id="m-t6-p">Wawel, Rynek, Kazimierz</p>
+            </a>
+            <a href="https://www.google.com/maps/search/restauracje+Krak%C3%B3w" target="_blank" class="tile">
+                <i class="fa-solid fa-utensils"></i>
+                <h3 id="m-t7-h">KRAKOWSKIE RESTAURACJE</h3>
+                <p id="m-t7-p">Rekomendowane lokale</p>
+            </a>
+            <a href="https://jakdojade.pl/krakow" target="_blank" class="tile">
+                <i class="fa-solid fa-bus"></i>
+                <h3 id="m-t8-h">KOMUNIKACJA MIEJSKA</h3>
+                <p id="m-t8-p">Rozkłady jazdy i przystanki</p>
+            </a>
+        </main>
+
+        <footer id="m-footer">
+            Naciśnij kafelek, aby przejść do szczegółów
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        const i18n = {
+            pl: {
+                s1_subtitle: "Witamy w apartamencie", s1_hint: "Przesuń w lewo, aby zacząć",
+                s2_title: "W czym możemy pomóc?", s2_t1_h: "WiFi & Kody", s2_t1_p: "Dane logowania i dostęp", s2_t2_h: "Regulamin", s2_t2_p: "Zasady panujące w domu", s2_t3_h: "Parking", s2_t3_p: "Twoje miejsce postojowe", s2_t4_h: "Kraków", s2_t4_p: "Atrakcje i zwiedzanie", s2_t5_h: "Restauracje", s2_t5_p: "Gdzie zjeść w okolicy", s2_t6_h: "Kontakt", s2_t6_p: "Pomoc i numery alarmowe",
+                s3_title: "WiFi & Dostęp do obiektu", s3_l1: "Sieć:", s3_l2: "Hasło:", s3_l3: "Kod do bramy:", s3_l4: "Kod do drzwi:", s3_qr: "Zeskanuj, aby połączyć się z WiFi",
+                s4_title: "Regulamin i zasady domu", s4_l1: "Doba hotelowa:", s4_l2: "Cisza nocna:", s4_l3: "Zakaz palenia:", s4_l4: "Zwierzęta:", s4_l5: "Segregacja:", s4_l6: "Energia:",
+                s5_title: "Parking - przed budynkiem na wprost wjazdu", s5_level: "Przed budynkiem", s5_instr_head: "Instrukcja parkowania i wyjazdu", s5_p1: "1. Zaparkuj na wprost jadąc od bramy wjazdowej tuż przed budynkiem.", s5_p2: "2. Użyj przycisku obok dzrzwi wejściowych lub pilota aby otworzyć bramę.", s5_p3: "3. Brama zamyka się automatycznie dopiero po dwóch minutach masz czas aby spokojnie wyjechać.", s5_p4: "4. Podczas wymeldowania pamiętaj aby zostawić pilota do bramy wjazdowej na wieszaku w korytarzu.",
+                s6_title: "Odkryj Kraków", s6_t1_h: "Rynek Główny", s6_t1_p: "5 min spacerem od obiektu", s6_t2_h: "Zamek na Wawelu", s6_t2_p: "12 min spacerem brzegiem Wisły", s6_t3_h: "Kazimierz", s6_t3_p: "15 min spacerem do klimatycznej dzielnicy",
+                s7_title: "Polecane Restauracje", s7_th1: "Miejsce", s7_th2: "Kuchnia", s7_th3: "Lokalizacja", s7_th4: "Polecamy", s7_r1_c: "Nowoczesna Polska", s7_r1_l: "Rynek Główny", s7_r1_r: "Deser \"Szara Gęś\"", s7_r2_c: "Włoska (Pizza)", s7_r2_r: "Pizza Neapolitańska", s7_r3_c: "Tradycyjna", s7_r3_r: "Placki ziemniaczane", s7_r4_c: "Śniadania / Kawa",
+                s8_title: "Prognoza Pogody", s8_status: "Słonecznie, Kraków", s8_desc: "Słoneczny dzień na zwiedzanie Starego Miasta!",
+                s9_title: "Informacje Praktyczne", s9_t1_h: "Sklep", s9_t1_p: "Żabka (50m)<br>Biedronka (300m)", s9_t2_h: "Transport", s9_t2_p: "Przystanek \"Stare Miasto\"<br>Aplikacja Jakdojade", s9_t3_h: "Apteka", s9_t3_p: "Całodobowa<br>ul. Kalwaryjska 10",
+                s10_title: "Potrzebujesz pomocy?", s10_host_h: "Twój Gospodarz", s10_host_p: "Jesteśmy do Twojej dyspozycji przez cały czas trwania pobytu.", s10_emerg_h: "Numery alarmowe", s10_emerg_num: "Numer ratunkowy:", s10_addr_lbl: "Adres apartamentu:",
+                s11_title: "Życzymy udanego pobytu!", s11_subtitle: "Zespół Matylda House", s11_hint: "Przesuń jeszcze raz w lewo, aby otworzyć Pulpit Menu →",
+                s12_title: "PULPIT GŁÓWNY", s12_subtitle: "Przejdź do interaktywnego menu kafelkowego, aby szybko znaleźć potrzebne linki i dokumenty.", s12_btn: "OTWÓRZ MENU GŁÓWNE",
+                m_btn_lang: "Język / Language", m_btn_slides: "Slajdy", m_t1_h: "WIFI & KODY", m_t1_p: "<strong>Sieć:</strong> Matylda<br><strong>Hasło:</strong> Domowe_WIFI", m_t2_h: "REGULAMIN OBIEKTU", m_t2_p: "Zasady pobytu i cisza nocna", m_t3_h: "PARKING", m_t3_p: "Przed budynkiem<br>Instrukcja wjazdu", m_t4_h: "POMOC & KONTAKT", m_t4_p: "Gospodarz:<br>+48 508 048 886", m_t5_h: "DZISIEJSZA POGODA", m_t5_p: "Prognoza dla Krakowa", m_t6_h: "ATRAKCJE KRAKOWA", m_t6_p: "Wawel, Rynek, Kazimierz", m_t7_h: "KRAKOWSKIE RESTAURACJE", m_t7_p: "Rekomendowane lokale", m_t8_h: "KOMUNIKACJA MIEJSKA", m_t8_p: "Rozkłady jazdy i przystanki", m_footer: "Naciśnij kafelek, aby przejść do szczegółów"
+            },
+            en: {
+                s1_subtitle: "Welcome to the apartment", s1_hint: "Swipe left to start",
+                s2_title: "How can we help?", s2_t1_h: "WiFi & Codes", s2_t1_p: "Login credentials & access", s2_t2_h: "House Rules", s2_t2_p: "Apartment policies", s2_t3_h: "Parking", s2_t3_p: "Your parking space", s2_t4_h: "Krakow", s2_t4_p: "Sightseeing & attractions", s2_t5_h: "Restaurants", s2_t5_p: "Where to eat nearby", s2_t6_h: "Contact", s2_t6_p: "Help & emergency numbers",
+                s3_title: "WiFi & Access Information", s3_l1: "Network:", s3_l2: "Password:", s3_l3: "Gate Code:", s3_l4: "Door Code:", s3_qr: "Scan to connect to WiFi",
+                s4_title: "House Rules & Guidelines", s4_l1: "Check-in / Out:", s4_l2: "Quiet hours:", s4_l3: "Smoking:", s4_l4: "Pets:", s4_l5: "Recycling:", s4_l6: "Energy:",
+                s5_title: "Parking - Spot No. 12", s5_level: "Level -1", s5_instr_head: "Parking Instructions", s5_p1: "1. Underground garage entrance is from Bracka Street.", s5_p2: "2. Use the remote attached to the keys to open the gate.", s5_p3: "3. Your spot is No. 12 on level -1.", s5_p4: "4. The elevator will take you directly to your apartment.",
+                s6_title: "Explore Krakow", s6_t1_h: "Main Square", s6_t1_p: "5 min walk from apartment", s6_t2_h: "Wawel Castle", s6_t2_p: "12 min walk along Vistula river", s6_t3_h: "Kazimierz", s6_t3_p: "15 min walk to atmospheric quarter",
+                s7_title: "Recommended Restaurants", s7_th1: "Place", s7_th2: "Cuisine", s7_th3: "Location", s7_th4: "Recommended", s7_r1_c: "Modern Polish", s7_r1_l: "Main Square", s7_r1_r: "\"Szara Gęś\" Dessert", s7_r2_c: "Italian (Pizza)", s7_r2_r: "Neapolitan Pizza", s7_r3_c: "Traditional", s7_r3_r: "Potato pancakes", s7_r4_c: "Breakfast / Coffee",
+                s8_title: "Weather Forecast", s8_status: "Sunny, Krakow", s8_desc: "A sunny day to explore the Old Town!",
+                s9_title: "Practical Information", s9_t1_h: "Grocery Store", s9_t1_p: "Żabka (50m)<br>Biedronka (300m)", s9_t2_h: "Transport", s9_t2_p: "Stop \"Stare Miasto\"<br>Jakdojade App", s9_t3_h: "Pharmacy", s9_t3_p: "24/7 Pharmacy<br>Kalwaryjska 10 St.",
+                s10_title: "Need Assistance?", s10_host_h: "Your Host", s10_host_p: "We are at your service throughout your stay.", s10_emerg_h: "Emergency Numbers", s10_emerg_num: "Emergency Service:", s10_addr_lbl: "Apartment Address:",
+                s11_title: "Enjoy your stay!", s11_subtitle: "Matylda House Team", s11_hint: "Swipe left once more to open Main Menu →",
+                s12_title: "MAIN DASHBOARD", s12_subtitle: "Proceed to interactive menu to quickly access links and documents.", s12_btn: "OPEN MAIN MENU",
+                m_btn_lang: "Language / Język", m_btn_slides: "Slides", m_t1_h: "WIFI & CODES", m_t1_p: "<strong>Network:</strong> Matylda_House<br><strong>Password:</strong> Domowe_WIFI", m_t2_h: "HOUSE RULES", m_t2_p: "Policies & quiet hours", m_t3_h: "PARKING", m_t3_p: "Spot No. 12<br>Entry instructions", m_t4_h: "HELP & CONTACT", m_t4_p: "Host:<br>+48 508 048 886", m_t5_h: "WEATHER TODAY", m_t5_p: "Forecast for Krakow", m_t6_h: "KRAKOW SIGHTS", m_t6_p: "Wawel, Square, Kazimierz", m_t7_h: "RESTAURANTS", m_t7_p: "Recommended places", m_t8_h: "PUBLIC TRANSPORT", m_t8_p: "Timetables & stops", m_footer: "Tap any tile to view details"
+            },
+            de: {
+                s1_subtitle: "Willkommen im Apartment", s1_hint: "Nach links wischen zum Starten",
+                s2_title: "Wie können wir helfen?", s2_t1_h: "WLAN & Codes", s2_t1_p: "Zugangsdaten & Schlüssel", s2_t2_h: "Hausordnung", s2_t2_p: "Regeln für den Aufenthalt", s2_t3_h: "Parkplatz", s2_t3_p: "Ihr Stellplatz", s2_t4_h: "Krakau", s2_t4_p: "Sehenswürdigkeiten", s2_t5_h: "Restaurants", s2_t5_p: "Essen in der Nähe", s2_t6_h: "Kontakt", s2_t6_p: "Hilfe & Notrufnummern",
+                s3_title: "WLAN & Zugang", s3_l1: "Netzwerk:", s3_l2: "Passwort:", s3_l3: "Tor-Code:", s3_l4: "Tür-Code:", s3_qr: "Scannen für WLAN-Verbindung",
+                s4_title: "Hausordnung", s4_l1: "Check-in / Out:", s4_l2: "Nachtruhe:", s4_l3: "Rauchen:", s4_l4: "Haustiere:", s4_l5: "Mülltrennung:", s4_l6: "Energie:",
+                s5_title: "Parkplatz Nr. 12", s5_level: "Ebene -1", s5_instr_head: "Parkanleitung", s5_p1: "1. Einfahrt zur Tiefgarage von der Bracka-Straße.", s5_p2: "2. Fernbedienung am Schlüsselbund zum Öffnen nutzen.", s5_p3: "3. Ihr Platz ist Nr. 12 auf Ebene -1.", s5_p4: "4. Der Aufzug bringt Sie direkt zum Apartment.",
+                s6_title: "Krakau entdecken", s6_t1_h: "Hauptmarkt", s6_t1_p: "5 Min. zu Fuß entfernt", s6_t2_h: "Wawel-Schloss", s6_t2_p: "12 Min. Spaziergang an der Weichsel", s6_t3_h: "Kazimierz", s6_t3_p: "15 Min. zum jüdischen Viertel",
+                s7_title: "Empfohlene Restaurants", s7_th1: "Ort", s7_th2: "Küche", s7_th3: "Lage", s7_th4: "Empfehlung", s7_r1_c: "Modernes Polnisch", s7_r1_l: "Hauptmarkt", s7_r1_r: "Dessert \"Szara Gęś\"", s7_r2_c: "Italienisch (Pizza)", s7_r2_r: "Neapolitanische Pizza", s7_r3_c: "Traditionell", s7_r3_r: "Kartoffelpuffer", s7_r4_c: "Frühstück / Kaffee",
+                s8_title: "Wettervorhersage", s8_status: "Sonnig, Krakau", s8_desc: "Ein sonniger Tag für die Altstadt!",
+                s9_title: "Praktische Infos", s9_t1_h: "Supermarkt", s9_t1_p: "Żabka (50m)<br>Biedronka (300m)", s9_t2_h: "Transport", s9_t2_p: "Haltestelle \"Stare Miasto\"<br>Jakdojade App", s9_t3_h: "Apotheke", s9_t3_p: "24/7 Apotheke<br>Kalwaryjska 10 Str.",
+                s10_title: "Brauchen Sie Hilfe?", s10_host_h: "Ihr Gastgeber", s10_host_p: "Wir stehen Ihnen während Ihres Aufenthalts zur Verfügung.", s10_emerg_h: "Notrufnummern", s10_emerg_num: "Notruf:", s10_addr_lbl: "Adresse des Apartments:",
+                s11_title: "Schönen Aufenthalt!", s11_subtitle: "Matylda House Team", s11_hint: "Noch einmal nach links wischen für das Hauptmenü →",
+                s12_title: "HAUPTMENÜ", s12_subtitle: "Klicken Sie, um zum interaktiven Menü zu gelangen.", s12_btn: "HAUPTMENÜ ÖFFNEN",
+                m_btn_lang: "Sprache / Language", m_btn_slides: "Folien", m_t1_h: "WLAN & CODES", m_t1_p: "<strong>Netzwerk:</strong> Matylda<br><strong>Passwort:</strong> Gosc123", m_t2_h: "HAUSORDNUNG", m_t2_p: "Regeln & Nachtruhe", m_t3_h: "PARKPLATZ", m_t3_p: "Stellplatz Nr. 12<br>Einfahrtsanleitung", m_t4_h: "HILFE & KONTAKT", m_t4_p: "Gastgeber:<br>+48 508 048 886", m_t5_h: "WETTER HEUTE", m_t5_p: "Vorhersage für Krakau", m_t6_h: "SEHENSWÜRDIGKEITEN", m_t6_p: "Wawel, Markt, Kazimierz", m_t7_h: "RESTAURANTS", m_t7_p: "Empfohlene Lokale", m_t8_h: "NAHVERKEHR", m_t8_p: "Fahrpläne & Haltestellen", m_footer: "Kachel antippen für Details"
+            },
+            cz: {
+                s1_subtitle: "Vítejte v apartmánu", s1_hint: "Přejetím doleva začnete",
+                s2_title: "Jak vám můžeme pomoci?", s2_t1_h: "WiFi & Kódy", s2_t1_p: "Přihlašovací údaje a přístup", s2_t2_h: "Ubytovací řád", s2_t2_p: "Pravidla domu", s2_t3_h: "Parkování", s2_t3_p: "Vaše parkovací místo", s2_t4_h: "Krakov", s2_t4_p: "Památky a turistika", s2_t5_h: "Restaurace", s2_t5_p: "Kde se najíst v okolí", s2_t6_h: "Kontakt", s2_t6_p: "Pomoc a nouzová čísla",
+                s3_title: "WiFi & Přístup do objektu", s3_l1: "Síť:", s3_l2: "Heslo:", s3_l3: "Kód k bráně:", s3_l4: "Kód ke dveřím:", s3_qr: "Naskenujte pro připojení k WiFi",
+                s4_title: "Ubytovací řád", s4_l1: "Čas příjezdu / odjezdu:", s4_l2: "Noční klid:", s4_l3: "Zákaz kouření:", s4_l4: "Domácí mazlíčci:", s4_l5: "Třídění odpadu:", s4_l6: "Energie:",
+                s5_title: "Parkování - Místo č. 12", s5_level: "Podlaží -1", s5_instr_head: "Instrukce k parkování", s5_p1: "1. Vjazd do garáže je z ulice Bracka.", s5_p2: "2. Použijte dálkový ovladač na klíčích k otevření brány.", s5_p3: "3. Vaše místo je č. 12 na podlaží -1.", s5_p4: "4. Výtah vás odveze přímo k apartmánu.",
+                s6_title: "Objevte Krakov", s6_t1_h: "Hlavní náměstí", s6_t1_p: "5 min chůze od objektu", s6_t2_h: "Hrad Wawel", s6_t2_p: "12 min chůze podél Visly", s6_t3_h: "Kazimierz", s6_t3_p: "15 min chůze do židovské čtvrti",
+                s7_title: "Doporučené restaurace", s7_th1: "Místo", s7_th2: "Kuchyně", s7_th3: "Lokalita", s7_th4: "Doporučujeme", s7_r1_c: "Moderní polská", s7_r1_l: "Hlavní náměstí", s7_r1_r: "Dezert \"Szara Gęś\"", s7_r2_c: "Italská (Pizza)", s7_r2_r: "Neapolská pizza", s7_r3_c: "Tradiční", s7_r3_r: "Bramboráky", s7_r4_c: "Snídaně / Káva",
+                s8_title: "Předpověď počasí", s8_status: "Slunečno, Krakov", s8_desc: "Slunečný den pro prohlídku Starého Města!",
+                s9_title: "Praktické informace", s9_t1_h: "Obchod", s9_t1_p: "Żabka (50m)<br>Biedronka (300m)", s9_t2_h: "Doprava", s9_t2_p: "Zastávka \"Stare Miasto\"<br>Aplikace Jakdojade", s9_t3_h: "Lékárna", s9_t3_p: "Nostnonsobná lékárna<br>ul. Kalwaryjska 10",
+                s10_title: "Potřebujete pomoc?", s10_host_h: "Váš hostitel", s10_host_p: "Jsme vám k dispozici po celou dobu vašeho pobytu.", s10_emerg_h: "Nouzová čísla", s10_emerg_num: "Tísňové volání:", s10_addr_lbl: "Adresa apartmánu:",
+                s11_title: "Přejeme příjemný pobyt!", s11_subtitle: "Tým Matylda House", s11_hint: "Přejeďte ještě jednou doleva pro Hlavní Menu →",
+                s12_title: "HLAVNÍ MENU", s12_subtitle: "Přejděte do interaktivního menu pro rychlý přístup k odkazům.", s12_btn: "OTEVŘÍT HLAVNÍ MENU",
+                m_btn_lang: "Jazyk / Language", m_btn_slides: "Prezentace", m_t1_h: "WIFI & KÓDY", m_t1_p: "<strong>Síť:</strong> Matylda<br><strong>Heslo:</strong> Gosc123", m_t2_h: "UBYTOVACÍ ŘÁD", m_t2_p: "Pravidla a noční klid", m_t3_h: "PARKOVÁNÍ", m_t3_p: "Místo č. 12<br>Instrukce vjezdu", m_t4_h: "POMOC & KONTAKT", m_t4_p: "Hostitel:<br>+48 508 048 886", m_t5_h: "DNEŠNÍ POČASÍ", m_t5_p: "Předpověď pro Krakov", m_t6_h: "PAMÁTKY KRAKOVA", m_t6_p: "Wawel, Náměstí, Kazimierz", m_t7_h: "RESTAURACE", m_t7_p: "Doporučené podniky", m_t8_h: "MĚSTSKÁ DOPRAVA", m_t8_p: "Jízdní řády a zastávky", m_footer: "Klepnutím na dlaždici zobrazíte podrobnosti"
+            },
+            fr: {
+                s1_subtitle: "Bienvenue dans l'appartement", s1_hint: "Glissez vers la gauche pour commencer",
+                s2_title: "Comment pouvons-nous vous aider?", s2_t1_h: "WiFi & Codes", s2_t1_p: "Identifiants et accès", s2_t2_h: "Règlement", s2_t2_p: "Règles de la maison", s2_t3_h: "Parking", s2_t3_p: "Votre place de stationnement", s2_t4_h: "Cracovie", s2_t4_p: "Attractions et visites", s2_t5_h: "Restaurants", s2_t5_p: "Où manger à proximité", s2_t6_h: "Contact", s2_t6_p: "Aide et numéros d'urgence",
+                s3_title: "WiFi & Accès à l'appartement", s3_l1: "Réseau:", s3_l2: "Mot de passe:", s3_l3: "Code du portail:", s3_l4: "Code de la porte:", s3_qr: "Scannez pour vous connecter au WiFi",
+                s4_title: "Règlement intérieur", s4_l1: "Check-in / Out:", s4_l2: "Heures de silence:", s4_l3: "Interdiction de fumer:", s4_l4: "Animaux:", s4_l5: "Tri sélectif:", s4_l6: "Énergie:",
+                s5_title: "Parking - Place N° 12", s5_level: "Niveau -1", s5_instr_head: "Instructions de stationnement", s5_p1: "1. L'entrée du garage se trouve rue Bracka.", s5_p2: "2. Utilisez la télécommande sur le trousseau pour ouvrir.", s5_p3: "3. Votre place est la N° 12 au niveau -1.", s5_p4: "4. L'ascenseur vous mènera directement à l'appartement.",
+                s6_title: "Découvrez Cracovie", s6_t1_h: "Place du Marché", s6_t1_p: "5 min à pied", s6_t2_h: "Château du Wawel", s6_t2_p: "12 min à pied le long de la Vistule", s6_t3_h: "Kazimierz", s6_t3_p: "15 min à pied du quartier historique",
+                s7_title: "Restaurants recommandés", s7_th1: "Lieu", s7_th2: "Cuisine", s7_th3: "Emplacement", s7_th4: "Recommandé", s7_r1_c: "Polonaise moderne", s7_r1_l: "Place du Marché", s7_r1_r: "Dessert \"Szara Gęś\"", s7_r2_c: "Italienne (Pizza)", s7_r2_r: "Pizza Napolitaine", s7_r3_c: "Traditionnelle", s7_r3_r: "Galettes de pommes de terre", s7_r4_c: "Petit-déjeuner / Café",
+                s8_title: "Météo", s8_status: "Ensoleillé, Cracovie", s8_desc: "Une belle journée pour visiter la Vieille Ville!",
+                s9_title: "Informations pratiques", s9_t1_h: "Magasin", s9_t1_p: "Żabka (50m)<br>Biedronka (300m)", s9_t2_h: "Transport", s9_t2_p: "Arrêt \"Stare Miasto\"<br>Appli Jakdojade", s9_t3_h: "Pharmacie", s9_t3_p: "Pharmacie 24/7<br>10 rue Kalwaryjska",
+                s10_title: "Besoin d'aide?", s10_host_h: "Votre Hôte", s10_host_p: "Nous sommes à votre disposition pendant tout votre séjour.", s10_emerg_h: "Urgences", s10_emerg_num: "Numéro d'urgence:", s10_addr_lbl: "Adresse de l'appartement:",
+                s11_title: "Bon séjour!", s11_subtitle: "L'équipe Matylda House", s11_hint: "Glissez encore à gauche pour le Menu Principal →",
+                s12_title: "MENU PRINCIPAL", s12_subtitle: "Accédez au menu interactif pour consulter rapidement les infos.", s12_btn: "OUVRIR LE MENU PRINCIPAL",
+                m_btn_lang: "Langue / Language", m_btn_slides: "Diapositives", m_t1_h: "WIFI & CODES", m_t1_p: "<strong>Réseau:</strong> Matylda<br><strong>Mot de passe:</strong> Gosc123", m_t2_h: "RÈGLEMENT INTERIEUR", m_t2_p: "Consignes et heures de silence", m_t3_h: "PARKING", m_t3_p: "Place N° 12<br>Instructions d'accès", m_t4_h: "AIDE & CONTACT", m_t4_p: "Hôte:<br>+48 508 048 886", m_t5_h: "MÉTÉO DU JOUR", m_t5_p: "Prévisions pour Cracovie", m_t6_h: "ATTRACTIONS", m_t6_p: "Wawel, Place du Marché, Kazimierz", m_t7_h: "RESTAURANTS", m_t7_p: "Adresses recommandées", m_t8_h: "TRANSPORTS", m_t8_p: "Horaires et arrêts", m_footer: "Appuyez sur une tuile pour plus de détails"
+            },
+            es: {
+                s1_subtitle: "Bienvenido al apartamento", s1_hint: "Desliza a la izquierda para comenzar",
+                s2_title: "¿En qué podemos ayudarte?", s2_t1_h: "WiFi y Códigos", s2_t1_p: "Datos de acceso y llaves", s2_t2_h: "Normas de la casa", s2_t2_p: "Reglas del apartamento", s2_t3_h: "Aparcamiento", s2_t3_p: "Tu plaza de parking", s2_t4_h: "Cracovia", s2_t4_p: "Atracciones y turismo", s2_t5_h: "Restaurantes", s2_t5_p: "Dónde comer cerca", s2_t6_h: "Contacto", s2_t6_p: "Ayuda y teléfonos de emergencia",
+                s3_title: "WiFi y Acceso", s3_l1: "Red:", s3_l2: "Contraseña:", s3_l3: "Código de entrada:", s3_l4: "Código de puerta:", s3_qr: "Escanea para conectarte al WiFi",
+                s4_title: "Reglas de la Casa", s4_l1: "Check-in / Out:", s4_l2: "Horas de silencio:", s4_l3: "Fumar:", s4_l4: "Mascotas:", s4_l5: "Reciclaje:", s4_l6: "Energía:",
+                s5_title: "Parking - Plaza Nº 12", s5_level: "Nivel -1", s5_instr_head: "Instrucciones de parking", s5_p1: "1. Entrada al garaje subterráneo por la calle Bracka.", s5_p2: "2. Usa el mando de las llaves para abrir el portón.", s5_p3: "3. Tu plaza es la Nº 12 en el nivel -1.", s5_p4: "4. El ascensor te llevará directo al apartamento.",
+                s6_title: "Descubre Cracovia", s6_t1_h: "Plaza Mayor", s6_t1_p: "A 5 min a pie del edificio", s6_t2_h: "Castillo de Wawel", s6_t2_p: "A 12 min a pie junto al río", s6_t3_h: "Kazimierz", s6_t3_p: "A 15 min a pie del barrio histórico",
+                s7_title: "Restaurantes recomendados", s7_th1: "Lugar", s7_th2: "Cocina", s7_th3: "Ubicación", s7_th4: "Recomendamos", s7_r1_c: "Polaca moderna", s7_r1_l: "Plaza Mayor", s7_r1_r: "Postre \"Szara Gęś\"", s7_r2_c: "Italiana (Pizza)", s7_r2_r: "Pizza Napolitana", s7_r3_c: "Tradicional", s7_r3_r: "Tortitas de patata", s7_r4_c: "Desayunos / Café",
+                s8_title: "Pronóstico del Tiempo", s8_status: "Soleado, Cracovia", s8_desc: "¡Un día soleado para recorrer el casco antiguo!",
+                s9_title: "Información Práctica", s9_t1_h: "Tienda", s9_t1_p: "Żabka (50m)<br>Biedronka (300m)", s9_t2_h: "Transporte", s9_t2_p: "Parada \"Stare Miasto\"<br>App Jakdojade", s9_t3_h: "Farmacia", s9_t3_p: "Farmacia 24 horas<br>c/ Kalwaryjska 10",
+                s10_title: "¿Necesitas ayuda?", s10_host_h: "Tu Anfitrión", s10_host_p: "Estamos a tu disposición durante toda tu estancia.", s10_emerg_h: "Teléfonos de Emergencia", s10_emerg_num: "Emergencias:", s10_addr_lbl: "Dirección del apartamento:",
+                s11_title: "¡Que tengas una feliz estancia!", s11_subtitle: "El equipo de Matylda House", s11_hint: "Desliza otra vez a la izquierda para el Menú Principal →",
+                s12_title: "MENÚ PRINCIPAL", s12_subtitle: "Accede al menú interactivo para consultar enlaces y documentos.", s12_btn: "ABRIR MENÚ PRINCIPAL",
+                m_btn_lang: "Idioma / Language", m_btn_slides: "Diapositivas", m_t1_h: "WIFI Y CÓDIGOS", m_t1_p: "<strong>Red:</strong> Matylda<br><strong>Contraseña:</strong> Gosc123", m_t2_h: "NORMAS DE LA CASA", m_t2_p: "Reglas y horas de silencio", m_t3_h: "PARKING", m_t3_p: "Plaza Nº 12<br>Instrucciones de entrada", m_t4_h: "AYUDA Y CONTACTO", m_t4_p: "Anfitrión:<br>+48 508 048 886", m_t5_h: "TIEMPO HOY", m_t5_p: "Pronóstico para Cracovia", m_t6_h: "ATRACCIONES", m_t6_p: "Wawel, Plaza Mayor, Kazimierz", m_t7_h: "RESTAURANTES", m_t7_p: "Locales recomendados", m_t8_h: "TRANSPORTE PÚBLICO", m_t8_p: "Horarios y paradas", m_footer: "Toca una casilla para ver los detalles"
+            },
+            ua: {
+                s1_subtitle: "Ласкаво просимо до апартаментів", s1_hint: "Проведіть ліворуч, щоб розпочати",
+                s2_title: "Чим ми можемо допомогти?", s2_t1_h: "WiFi та Коди", s2_t1_p: "Дані доступу та паролі", s2_t2_h: "Правила дому", s2_t2_p: "Правила проживання", s2_t3_h: "Паркінг", s2_t3_p: "Ваше місце для авто", s2_t4_h: "Краків", s2_t4_p: "Пам'ятки та екскурсії", s2_t5_h: "Ресторани", s2_t5_p: "Де поїсти поблизу", s2_t6_h: "Контакти", s2_t6_p: "Допомога та екстрені номери",
+                s3_title: "WiFi та Доступ до об'єкта", s3_l1: "Мережа:", s3_l2: "Пароль:", s3_l3: "Код від брами:", s3_l4: "Код від дверей:", s3_qr: "Відскануйте для підключення до WiFi",
+                s4_title: "Правила проживання", s4_l1: "Заїзд / Виїзд:", s4_l2: "Тихі години:", s4_l3: "Куріння:", s4_l4: "Тварини:", s4_l5: "Сортування сміття:", s4_l6: "Енергія:",
+                s5_title: "Паркінг - Місце № 12", s5_level: "Рівень -1", s5_instr_head: "Інструкція з паркування", s5_p1: "1. В'їзд до підземного гаража з вулиці Bracka.", s5_p2: "2. Використовуйте пульт на ключах, щоб відкрити ворота.", s5_p3: "3. Ваше місце № 12 на рівні -1.", s5_p4: "4. Ліфт підніме вас безпосередньо до апартаментів.",
+                s6_title: "Відкрийте для себе Краків", s6_t1_h: "Головний Ринок", s6_t1_p: "5 хв пішки від апартаментів", s6_t2_h: "Замок Вавель", s6_t2_p: "12 хв пішки уздовж Вісли", s6_t3_h: "Казімєж", s6_t3_p: "15 хв пішки до атмосферного району",
+                s7_title: "Рекомендовані ресторани", s7_th1: "Місце", s7_th2: "Кухня", s7_th3: "Локація", s7_th4: "Рекомендуємо", s7_r1_c: "Сучасна польська", s7_r1_l: "Головний Ринок", s7_r1_r: "Десерт \"Szara Gęś\"", s7_r2_c: "Італійська (Піца)", s7_r2_r: "Неаполітанська піца", s7_r3_c: "Традиційна", s7_r3_r: "Деруни", s7_r4_c: "Сніданки / Кава",
+                s8_title: "Прогноз погоди", s8_status: "Сонячно, Краків", s8_desc: "Сонячний день для прогулянки Старим Містом!",
+                s9_title: "Практична інформація", s9_t1_h: "Магазин", s9_t1_p: "Żabka (50м)<br>Biedronka (300м)", s9_t2_h: "Транспорт", s9_t2_p: "Зупинка \"Stare Miasto\"<br>Додаток Jakdojade", s9_t3_h: "Аптека", s9_t3_p: "Цілодобова аптека<br>вул. Kalwaryjska 10",
+                s10_title: "Потрібна допомога?", s10_host_h: "Ваш господар", s10_host_p: "Ми у вашому розпорядженні протягом усього вашого перебування.", s10_emerg_h: "Екстрені номери", s10_emerg_num: "Служба порятунку:", s10_addr_lbl: "Адреса апартаментів:",
+                s11_title: "Приємного відпочинку!", s11_subtitle: "Команда Matylda House", s11_hint: "Проведіть ще раз ліворуч, щоб відкрити Головне Меню →",
+                s12_title: "ГОЛОВНЕ МЕНЮ", s12_subtitle: "Перейдіть до інтерактивного меню для швидкого доступу до корисних посилань.", s12_btn: "ВІДКРИТИ ГОЛОВНЕ МЕНЮ",
+                m_btn_lang: "Мова / Language", m_btn_slides: "Слайди", m_t1_h: "WIFI ТА КОДИ", m_t1_p: "<strong>Мережа:</strong> Matylda<br><strong>Пароль:</strong> Gosc123", m_t2_h: "ПРАВИЛА ДОМУ", m_t2_p: "Правила проживання та тиша", m_t3_h: "ПАРКІНГ", m_t3_p: "Місце № 12<br>Інструкція з в'їзду", m_t4_h: "ДОПОМОГА ТА КОНТАКТИ", m_t4_p: "Господар:<br>+48 508 048 886", m_t5_h: "ПОГОДА СЬОГОДНІ", m_t5_p: "Прогноз для Кракова", m_t6_h: "ПАТРІОТИЧНІ МІСЦЯ", m_t6_p: "Вавель, Ринок, Казімєж", m_t7_h: "РЕСТОРАНИ", m_t7_p: "Рекомендовані заклади", m_t8_h: "МІСЬКИЙ ТРАНСПОРТ", m_t8_p: "Розклад та зупинки", m_footer: "Натисніть на плитку, щоб переглянути деталі"
+            },
+            ru: {
+                s1_subtitle: "Добро пожаловать в апартаменты", s1_hint: "Проведите влево, чтобы начать",
+                s2_title: "Чем мы можем помочь?", s2_t1_h: "WiFi и Коды", s2_t1_p: "Данные доступа и пароли", s2_t2_h: "Правила дома", s2_t2_p: "Правила проживания", s2_t3_h: "Парковка", s2_t3_p: "Ваше парковочное место", s2_t4_h: "Краков", s2_t4_p: "Достопримечательности", s2_t5_h: "Рестораны", s2_t5_p: "Где поесть поблизости", s2_t6_h: "Контакты", s2_t6_p: "Помощь и экстренные номера",
+                s3_title: "WiFi и Доступ к объекту", s3_l1: "Сеть:", s3_l2: "Пароль:", s3_l3: "Код от ворот:", s3_l4: "Код от двери:", s3_qr: "Отсканируйте для подключения к WiFi",
+                s4_title: "Правила проживания", s4_l1: "Заезд / Выезд:", s4_l2: "Тихие часы:", s4_l3: "Курение:", s4_l4: "Животные:", s4_l5: "Сортировка мусора:", s4_l6: "Энергия:",
+                s5_title: "Парковка - Место № 12", s5_level: "Уровень -1", s5_instr_head: "Инструкция по парковке", s5_p1: "1. Въезд в подземный гараж с улицы Bracka.", s5_p2: "2. Используйте пульт на ключах, чтобы открыть ворота.", s5_p3: "3. Ваше место № 12 на уровне -1.", s5_p4: "4. Лифт доставит вас прямо к апартаментам.",
+                s6_title: "Откройте для себя Краков", s6_t1_h: "Главный Рынок", s6_t1_p: "5 мин пешком от объекта", s6_t2_h: "Замок Вавель", s6_t2_p: "12 мин пешком вдоль Вислы", s6_t3_h: "Казимеж", s6_t3_p: "15 мин пешком до исторического района",
+                s7_title: "Рекомендуемые рестораны", s7_th1: "Место", s7_th2: "Кухня", s7_th3: "Локация", s7_th4: "Рекомендуем", s7_r1_c: "Современная польская", s7_r1_l: "Главный Рынок", s7_r1_r: "Десерт \"Szara Gęś\"", s7_r2_c: "Итальянская (Пицца)", s7_r2_r: "Неаполитанская пицца", s7_r3_c: "Традиционная", s7_r3_r: "Драники", s7_r4_c: "Завтраки / Кофе",
+                s8_title: "Прогноз погоды", s8_status: "Солнечно, Краков", s8_desc: "Солнечный день для прогулки по Старому Городу!",
+                s9_title: "Практическая информация", s9_t1_h: "Магазин", s9_t1_p: "Żabka (50м)<br>Biedronka (300м)", s9_t2_h: "Транспорт", s9_t2_p: "Остановка \"Stare Miasto\"<br>Приложение Jakdojade", s9_t3_h: "Аптека", s9_t3_p: "Круглосуточная аптека<br>ул. Kalwaryjska 10",
+                s10_title: "Нужна помощь?", s10_host_h: "Ваш хозяин", s10_host_p: "Мы в вашем распоряжении на протяжении всего вашего пребывания.", s10_emerg_h: "Экстренные номера", s10_emerg_num: "Служба спасения:", s10_addr_lbl: "Адрес апартаментов:",
+                s11_title: "Приятного отдыха!", s11_subtitle: "Команда Matylda House", s11_hint: "Проведите еще раз влево, чтобы открыть Главное Меню →",
+                s12_title: "ГЛАВНОЕ МЕНЮ", s12_subtitle: "Перейдите в интерактивное меню для быстрого доступа к ссылкам.", s12_btn: "ОТКРЫТЬ ГЛАВНОЕ МЕНЮ",
+                m_btn_lang: "Язык / Language", m_btn_slides: "Слайды", m_t1_h: "WIFI И КОДЫ", m_t1_p: "<strong>Сеть:</strong> Matylda<br><strong>Пароль:</strong> Gosc123", m_t2_h: "ПРАВИЛА ДОМА", m_t2_p: "Правила и тихий час", m_t3_h: "ПАРКОВКА", m_t3_p: "Место № 12<br>Инструкция въезда", m_t4_h: "ПОМОЩЬ И КОНТАКТЫ", m_t4_p: "Хозяин:<br>+48 508 048 886", m_t5_h: "ПОГОДА СЕГОДНЯ", m_t5_p: "Прогноз для Кракова", m_t6_h: "ДОСТОПРИМЕЧАТЕЛЬНОСТИ", m_t6_p: "Вавель, Рынок, Казимеж", m_t7_h: "РЕСТОРАНЫ", m_t7_p: "Рекомендуемые заведения", m_t8_h: "ГОРОДСКОЙ ТРАНСПОРТ", m_t8_p: "Расписание и остановки", m_footer: "Нажмите на плитку для подробностей"
+            }
+        };
+
+        const swiper = new Swiper(".mySwiper", {
+            direction: "horizontal",
+            loop: false,
+            pagination: { el: ".swiper-pagination", clickable: true },
+            navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
+            on: {
+                reachEnd: function () {
+                    setTimeout(() => {
+                        this.once('slideChange', function () {
+                            showMenu();
+                        });
+                    }, 200);
+                }
+            }
+        });
+
+        function selectLanguage(lang) {
+            const data = i18n[lang] || i18n['pl'];
+
+            // Slajd 1
+            document.getElementById('s1-subtitle').innerText = data.s1_subtitle;
+            document.getElementById('s1-hint').innerText = data.s1_hint;
+
+            // Slajd 2
+            document.getElementById('s2-title').innerText = data.s2_title;
+            document.getElementById('s2-t1-h').innerText = data.s2_t1_h;
+            document.getElementById('s2-t1-p').innerText = data.s2_t1_p;
+            document.getElementById('s2-t2-h').innerText = data.s2_t2_h;
+            document.getElementById('s2-t2-p').innerText = data.s2_t2_p;
+            document.getElementById('s2-t3-h').innerText = data.s2_t3_h;
+            document.getElementById('s2-t3-p').innerText = data.s2_t3_p;
+            document.getElementById('s2-t4-h').innerText = data.s2_t4_h;
+            document.getElementById('s2-t4-p').innerText = data.s2_t4_p;
+            document.getElementById('s2-t5-h').innerText = data.s2_t5_h;
+            document.getElementById('s2-t5-p').innerText = data.s2_t5_p;
+            document.getElementById('s2-t6-h').innerText = data.s2_t6_h;
+            document.getElementById('s2-t6-p').innerText = data.s2_t6_p;
+
+            // Slajd 3
+            document.getElementById('s3-title').innerText = data.s3_title;
+            document.getElementById('s3-l1').innerText = data.s3_l1;
+            document.getElementById('s3-l2').innerText = data.s3_l2;
+            document.getElementById('s3-l3').innerText = data.s3_l3;
+            document.getElementById('s3-l4').innerText = data.s3_l4;
+            document.getElementById('s3-qr').innerText = data.s3_qr;
+
+            // Slajd 4
+            document.getElementById('s4-title').innerText = data.s4_title;
+            document.getElementById('s4-l1').innerText = data.s4_l1;
+            document.getElementById('s4-l2').innerText = data.s4_l2;
+            document.getElementById('s4-l3').innerText = data.s4_l3;
+            document.getElementById('s4-l4').innerText = data.s4_l4;
+            document.getElementById('s4-l5').innerText = data.s4_l5;
+            document.getElementById('s4-l6').innerText = data.s4_l6;
+
+            // Slajd 5
+            document.getElementById('s5-title').innerText = data.s5_title;
+            document.getElementById('s5-level').innerText = data.s5_level;
+            document.getElementById('s5-instr-head').innerText = data.s5_instr_head;
+            document.getElementById('s5-p1').innerText = data.s5_p1;
+            document.getElementById('s5-p2').innerText = data.s5_p2;
+            document.getElementById('s5-p3').innerText = data.s5_p3;
+            document.getElementById('s5-p4').innerText = data.s5_p4;
+
+            // Slajd 6
+            document.getElementById('s6-title').innerText = data.s6_title;
+            document.getElementById('s6-t1-h').innerText = data.s6_t1_h;
+            document.getElementById('s6-t1-p').innerText = data.s6_t1_p;
+            document.getElementById('s6-t2-h').innerText = data.s6_t2_h;
+            document.getElementById('s6-t2-p').innerText = data.s6_t2_p;
+            document.getElementById('s6-t3-h').innerText = data.s6_t3_h;
+            document.getElementById('s6-t3-p').innerText = data.s6_t3_p;
+
+            // Slajd 7
+            document.getElementById('s7-title').innerText = data.s7_title;
+            document.getElementById('s7-th1').innerText = data.s7_th1;
+            document.getElementById('s7-th2').innerText = data.s7_th2;
+            document.getElementById('s7-th3').innerText = data.s7_th3;
+            document.getElementById('s7-th4').innerText = data.s7_th4;
+            document.getElementById('s7-r1-c').innerText = data.s7_r1_c;
+            document.getElementById('s7-r1-l').innerText = data.s7_r1_l;
+            document.getElementById('s7-r1-r').innerText = data.s7_r1_r;
+            document.getElementById('s7-r2-c').innerText = data.s7_r2_c;
+            document.getElementById('s7-r2-r').innerText = data.s7_r2_r;
+            document.getElementById('s7-r3-c').innerText = data.s7_r3_c;
+            document.getElementById('s7-r3-r').innerText = data.s7_r3_r;
+            document.getElementById('s7-r4-c').innerText = data.s7_r4_c;
+
+            // Slajd 8
+            document.getElementById('s8-title').innerText = data.s8_title;
+            document.getElementById('s8-status').innerText = data.s8_status;
+            document.getElementById('s8-desc').innerText = data.s8_desc;
+
+            // Slajd 9
+            document.getElementById('s9-title').innerText = data.s9_title;
+            document.getElementById('s9-t1-h').innerText = data.s9_t1_h;
+            document.getElementById('s9-t1-p').innerHTML = data.s9_t1_p;
+            document.getElementById('s9-t2-h').innerText = data.s9_t2_h;
+            document.getElementById('s9-t2-p').innerHTML = data.s9_t2_p;
+            document.getElementById('s9-t3-h').innerText = data.s9_t3_h;
+            document.getElementById('s9-t3-p').innerHTML = data.s9_t3_p;
+
+            // Slajd 10
+            document.getElementById('s10-title').innerText = data.s10_title;
+            document.getElementById('s10-host-h').innerText = data.s10_host_h;
+            document.getElementById('s10-host-p').innerText = data.s10_host_p;
+            document.getElementById('s10-emerg-h').innerText = data.s10_emerg_h;
+            document.getElementById('s10-emerg-num').innerText = data.s10_emerg_num;
+            document.getElementById('s10-addr-lbl').innerText = data.s10_addr_lbl;
+
+            // Slajd 11
+            document.getElementById('s11-title').innerText = data.s11_title;
+            document.getElementById('s11-subtitle').innerText = data.s11_subtitle;
+            document.getElementById('s11-hint').innerText = data.s11_hint;
+
+            // Slajd 12
+            document.getElementById('s12-title').innerText = data.s12_title;
+            document.getElementById('s12-subtitle').innerText = data.s12_subtitle;
+            document.getElementById('s12-btn').innerText = data.s12_btn;
+
+            // Menu Kafelkowe
+            document.getElementById('m-btn-lang').innerText = data.m_btn_lang;
+            document.getElementById('m-btn-slides').innerText = data.m_btn_slides;
+            document.getElementById('m-t1-h').innerText = data.m_t1_h;
+            document.getElementById('m-t1-p').innerHTML = data.m_t1_p;
+            document.getElementById('m-t2-h').innerText = data.m_t2_h;
+            document.getElementById('m-t2-p').innerText = data.m_t2_p;
+            document.getElementById('m-t3-h').innerText = data.m_t3_h;
+            document.getElementById('m-t3-p').innerHTML = data.m_t3_p;
+            document.getElementById('m-t4-h').innerText = data.m_t4_h;
+            document.getElementById('m-t4-p').innerHTML = data.m_t4_p;
+            document.getElementById('m-t5-h').innerText = data.m_t5_h;
+            document.getElementById('m-t5-p').innerText = data.m_t5_p;
+            document.getElementById('m-t6-h').innerText = data.m_t6_h;
+            document.getElementById('m-t6-p').innerText = data.m_t6_p;
+            document.getElementById('m-t7-h').innerText = data.m_t7_h;
+            document.getElementById('m-t7-p').innerText = data.m_t7_p;
+            document.getElementById('m-t8-h').innerText = data.m_t8_h;
+            document.getElementById('m-t8-p').innerText = data.m_t8_p;
+            document.getElementById('m-footer').innerText = data.m_footer;
+
+            // Przejście do slajdów
+            document.getElementById('lang-section').classList.add('hidden');
+            document.getElementById('slider-section').classList.remove('hidden');
+            swiper.slideTo(0);
+        }
+
+        function showLangSelect() {
+            document.getElementById('menu-section').classList.add('hidden');
+            document.getElementById('slider-section').classList.add('hidden');
+            document.getElementById('lang-section').classList.remove('hidden');
+        }
+
+        function showMenu() {
+            document.getElementById('slider-section').classList.add('hidden');
+            document.getElementById('menu-section').classList.remove('hidden');
+        }
+
+        function showSlides() {
+            document.getElementById('menu-section').classList.add('hidden');
+            document.getElementById('slider-section').classList.remove('hidden');
+            swiper.slideTo(0);
+        }
+    </script>
+</body>
+</html>
